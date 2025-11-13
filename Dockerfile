@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
 COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
 RUN chmod +x /app/jiotv_go-linux-amd64
 
-# Expose the port (optional; Render uses $PORT)
+# Expose the port (optional)
 EXPOSE 5001
 
-# Start JioTV Go using Render's PORT environment variable
-CMD ["/app/jiotv_go-linux-amd64", "serve", "--port", "${PORT}"]
+# Start JioTV Go (shell form to expand $PORT)
+CMD /app/jiotv_go-linux-amd64 serve --port $PORT
