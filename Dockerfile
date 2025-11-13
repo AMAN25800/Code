@@ -16,11 +16,11 @@ COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
 RUN chmod +x /app/jiotv_go-linux-amd64
 
 # Install ngrok
-RUN wget -O /tmp/ngrok.zip "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip" \
-    && unzip /tmp/ngrok.zip -d /usr/local/bin \
+# Install ngrok v3
+RUN wget -O /tmp/ngrok.zip "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz" \
+    && tar -xvzf /tmp/ngrok.zip -C /usr/local/bin \
     && chmod +x /usr/local/bin/ngrok \
     && rm /tmp/ngrok.zip
-
 # Set working directory
 WORKDIR /app
 
