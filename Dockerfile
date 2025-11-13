@@ -16,7 +16,7 @@ RUN chmod +x /app/jiotv_go-linux-amd64
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose ports
-EXPOSE 80 5000
+EXPOSE 80 5001
 
 # Start executable and NGINX
 CMD /app/jiotv_go-linux-amd64 & nginx -g "daemon off;"
