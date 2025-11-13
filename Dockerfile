@@ -6,7 +6,7 @@ COPY jiotv_go-linux-amd64 .
 RUN chmod +x jiotv_go-linux-amd64
 
 # Stage 2: Caddy base image
-FROM caddy:2.9.3
+FROM caddy:2
 
 # Copy JioTV Go binary from previous stage
 COPY --from=jiotv /app/jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
