@@ -14,7 +14,7 @@ COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
 RUN chmod +x /app/jiotv_go-linux-amd64
 
 # Copy Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.template.d/default.conf
 
 # Expose ports
 EXPOSE 80 5001
