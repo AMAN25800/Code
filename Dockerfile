@@ -1,4 +1,3 @@
-# Base image
 FROM ubuntu:22.04
 
 # Install dependencies
@@ -19,8 +18,8 @@ RUN rm -f /usr/share/nginx/html/index.html
 # Copy custom Nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose ports
-EXPOSE 80 5001
+# Expose port 80 (Render default)
+EXPOSE 80
 
-# Start JioTV Go and Nginx
+# Start JioTV Go first in background, then Nginx in foreground
 CMD /app/jiotv_go-linux-amd64 serve --host 0.0.0.0 --port 5001 & nginx -g "daemon off;"
