@@ -5,24 +5,14 @@ FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
-    nginx \
-    gettext-base \
-    netcat \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy executable
 COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
 RUN chmod +x /app/jiotv_go-linux-amd64
 
-# Copy NGINX template
-COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
-
-# Copy start script
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-# Expose internal port of executable
+# Expose internal port (optional, for documentation)
 EXPOSE 5000
 
-# Start the script
-CMD ["/start.sh"]
+# Start the executable on the port provided by Render
+CMD ["/app/jiotv_go-linux-amd64", "--port", "$PORT"]
