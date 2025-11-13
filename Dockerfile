@@ -20,4 +20,4 @@ RUN chmod +x /app/jiotv_go-linux-amd64
 EXPOSE 80 5001
 
 # Start the .exe in serve mode and Nginx
-CMD /app/jiotv_go-linux-amd64 serve & nginx -g "daemon off;"
+CMD /app/jiotv_go-linux-amd64 serve
