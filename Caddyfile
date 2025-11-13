@@ -3,7 +3,8 @@
 }
 
 :5001 {
-    handle_path /play/* {
+    # Handle all /play/* requests without stripping path
+    handle /play/* {
         reverse_proxy 127.0.0.1:5002 {
             header_up Access-Control-Allow-Origin "*"
             header_up Access-Control-Allow-Methods "GET, POST, OPTIONS"
@@ -13,10 +14,12 @@
         }
     }
 
-    # Optional: catch all other requests
-    reverse_proxy 127.0.0.1:5002 {
-        header_up Access-Control-Allow-Origin "*"
-        header_up Access-Control-Allow-Methods "GET, POST, OPTIONS"
-        header_up Access-Control-Allow-Headers "Origin, Content-Type, Accept"
+    # Catch all other requests
+    handle {
+        reverse_proxy 127.0.0.1:5002 {
+            header_up Access-Control-Allow-Origin "*"
+            header_up Access-Control-Allow-Methods "GET, POST, OPTIONS"
+            header_up Access-Control-Allow-Headers "Origin, Content-Type, Accept"
+        }
     }
 }
