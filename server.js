@@ -1,30 +1,58 @@
-const { spawn } = require("child_process");
-const http = require("http");
+const express = require("express");
+const { exec } = require("child_process");
+const path = require("path");
+
+const app = express();
+app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
 
-// Start the backend executable
-const backend = spawn("./jiotv_go-linux-amd64");
+// Serve frontend (optional)
+app.use(express.static(path.join(__dirname, "public")));
 
-backend.stdout.on("data", (data) => {
-  console.log(`[backend stdout]: ${data}`);
+// Status API
+app.get("/api/status", (req, res) => {
+  res.json({ status: "JioTV backend running" });
 });
 
-backend.stderr.on("data", (data) => {
-  console.error(`[backend stderr]: ${data}`);
-});
+// Send OTP
+app.post("/api/send-otp", (req, res) => {
+  const phone = req.body.phone;
+  if (!phone) return res.status(400).json({ error: "Phone number required" });
 
-backend.on("exit", (code) => {
-  console.log(`Backend exited with code ${code}`);
-});
-
-// Minimal HTTP server just to satisfy Render
-const server = http.createServer((req, res) => {
-  res.writeHead(200, {
-    "Content-Type": "text/plain",
+  exec(`./jiotv_go-linux-amd64 --send-otp ${phone}`, (err, stdout, stderr) => {
+    if (err) return res.status(500).json({ error: stderr });
+    res.json({ message: stdout.trim() });
   });
-  res.end("JioTV Go is running.\n");
 });
 
-server.listen(PORT, () => {
-  console.log(`HTTP wrapper listening on port ${PORT}`);
+// Login with OTP
+app.post("/api/login", (req, res) => {
+  const { phone, otp } = req.body;
+  if (!phone || !otp) return res.status(400).json({ error: "Phone & OTP required" });
+
+  exec(`./jiotv_go-linux-amd64 --login ${phone} ${otp}`, (err, stdout, stderr) => {
+    if (err) return res.status(500).json({ error: stderr });
+    res.json({ message: stdout.trim() });
+  });
 });
+
+// Fetch channels
+app.get("/api/channels", (req, res) => {
+  exec(`./jiotv_go-linux-amd64 --list-channels`, (err, stdout, stderr) => {
+    if (err) return res.status(500).json({ error: stderr });
+    try {
+      const channels = JSON.parse(stdout); // assuming executable outputs JSON
+      res.json({ channels });
+    } catch {
+      res.json({ raw: stdout });
+    }
+  });
+});
+
+// Start backend executable in background (if needed)
+exec(`./jiotv_go-linux-amd64 &`, (err) => {
+  if (err) console.error("Failed to start backend:", err);
+});
+
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
