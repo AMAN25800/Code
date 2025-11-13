@@ -2,8 +2,7 @@
     admin off
 }
 
-:5001 {
-    # Handle all /play/* requests without stripping path
+:{$PORT} {
     handle /play/* {
         reverse_proxy 127.0.0.1:5002 {
             header_up Access-Control-Allow-Origin "*"
@@ -14,7 +13,6 @@
         }
     }
 
-    # Catch all other requests
     handle {
         reverse_proxy 127.0.0.1:5002 {
             header_up Access-Control-Allow-Origin "*"
