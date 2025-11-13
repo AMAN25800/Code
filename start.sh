@@ -1,16 +1,17 @@
 #!/bin/bash
+set -e
 
-# Start the backend executable on internal port 5000
-/app/jiotv_go-linux-amd64 &
+# Start JioTV Go on localhost:5002
+./jiotv_go-linux-amd64 serve --host 0.0.0.0 --port 5002 &
+JTV_PID=$!
 
-# Wait for port 5000 to be open
-echo "Waiting for backend to start on port 5000..."
-while ! nc -z localhost 5000; do
-  sleep 1
-done
+# Start ngrok to forward internal port 5002
+# NGROK_AUTH_TOKEN should be set as an environment variable in Render
+ngrok http 5002 --log=stdout &
+NGROK_PID=$!
 
-# Substitute $PORT in NGINX template
-envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+# Wait for any process to exit
+wait -n
 
-# Start NGINX in foreground
-nginx -g "daemon off;"
+# Kill all processes if one exits
+kill $JTV_PID $NGROK_PID
