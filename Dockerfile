@@ -16,8 +16,8 @@ RUN chmod +x /app/jiotv_go-linux-amd64
 # Set working directory
 WORKDIR /app
 
-# Expose default port if needed (adjust if JioTV Go uses a different port)
+# Expose the port your app will use
 EXPOSE 5001
 
-# Run the binary with the serve command
-CMD ["./jiotv_go-linux-amd64", "serve"]
+# Run the binary with the serve command, binding to 0.0.0.0
+CMD ["sh", "-c", "./jiotv_go-linux-amd64 serve --host 0.0.0.0 --port 5001"]
