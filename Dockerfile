@@ -1,10 +1,13 @@
+# Base image
 FROM ubuntu:22.04
 
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     nginx \
     gettext-base \
+    netcat \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy executable
@@ -14,10 +17,12 @@ RUN chmod +x /app/jiotv_go-linux-amd64
 # Copy NGINX template
 COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
 
-# Expose internal port for .exe (optional)
+# Copy start script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Expose internal port of executable
 EXPOSE 5000
 
-# Start executable and NGINX (with $PORT substitution)
-CMD /app/jiotv_go-linux-amd64 & \
-    envsubst '$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && \
-    nginx -g "daemon off;"
+# Start the script
+CMD ["/start.sh"]
