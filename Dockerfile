@@ -31,5 +31,5 @@ COPY Caddyfile /etc/caddy/Caddyfile
 EXPOSE 5001
 
 # Start your app + Caddy
-CMD ./jiotv_go-linux-amd64 serve --host 0.0.0.0 --port 5001 & \
+CMD ./jiotv_go-linux-amd64 serve --host 0.0.0.0 --port 5002 & \
     caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
