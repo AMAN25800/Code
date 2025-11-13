@@ -5,8 +5,10 @@ set -e
 ./jiotv_go-linux-amd64 serve --host 0.0.0.0 --port 5002 &
 JTV_PID=$!
 
-# Start ngrok to forward internal port 5002
-# NGROK_AUTH_TOKEN should be set as an environment variable in Render
+# Configure ngrok with auth token from environment
+ngrok authtoken $NGROK_AUTH_TOKEN
+
+# Start ngrok HTTP tunnel
 ngrok http 5002 --log=stdout &
 NGROK_PID=$!
 
