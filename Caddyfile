@@ -1,9 +1,5 @@
-{
-    admin off
-}
-
 :{$PORT} {
-    # Video streaming
+    # Forward /play/* for video
     handle /play/* {
         reverse_proxy 127.0.0.1:5002 {
             header_up Access-Control-Allow-Origin "*"
@@ -14,7 +10,7 @@
         }
     }
 
-    # EPG API
+    # Forward /epg/* for EPG API
     handle /epg/* {
         reverse_proxy 127.0.0.1:5002 {
             header_up Access-Control-Allow-Origin "*"
@@ -23,7 +19,7 @@
         }
     }
 
-    # Catch all other requests
+    # Catch-all
     handle {
         reverse_proxy 127.0.0.1:5002 {
             header_up Access-Control-Allow-Origin "*"
