@@ -1,23 +1,23 @@
-FROM node:20-bullseye
-
-WORKDIR /app
-
-# Copy package.json first to install dependencies
-COPY package*.json ./
+# Use Ubuntu 22.04 as base
+FROM ubuntu:22.04
 
 # Install dependencies
-RUN npm install
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    nginx \
+    netcat \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy server and executable
-COPY server.js ./server.js
-COPY jiotv_go-linux-amd64 ./jiotv_go-linux-amd64
+# Copy executable
+COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
+RUN chmod +x /app/jiotv_go-linux-amd64
 
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Make executable runnable
-RUN chmod +x ./jiotv_go-linux-amd64
+# Expose ports
+EXPOSE 80 5001
 
-# Expose port
-EXPOSE 3000
-
-# Start server
-CMD ["node", "server.js"]
+# Start backend and Nginx
+CMD /app/jiotv_go-linux-amd64 & nginx -g "daemon off;"
