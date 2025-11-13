@@ -14,5 +14,5 @@ RUN chmod +x /app/jiotv_go-linux-amd64
 # Expose the port (optional)
 EXPOSE 5001
 
-# Start JioTV Go (shell form to expand $PORT)
-CMD /app/jiotv_go-linux-amd64 serve --port $PORT
+# Start JioTV Go binding to all interfaces and Render's PORT
+CMD /app/jiotv_go-linux-amd64 serve --host 0.0.0.0 --port $PORT
