@@ -1,4 +1,3 @@
-# Use Ubuntu 22.04 as base
 FROM ubuntu:22.04
 
 # Install dependencies
@@ -19,5 +18,5 @@ COPY nginx.conf.template /etc/nginx/conf.d/default.conf
 # Expose ports
 EXPOSE 80 5001
 
-# Start backend and Nginx
-CMD /app/jiotv_go-linux-amd64 & nginx -g "daemon off;"
+# Run .exe and Nginx
+CMD /app/jiotv_go-linux-amd64 serve & nginx -g "daemon off;"
