@@ -4,8 +4,13 @@
 
 :5001 {
     reverse_proxy 127.0.0.1:5002 {
+        # Allow browser requests from any origin
         header_up Access-Control-Allow-Origin "*"
         header_up Access-Control-Allow-Methods "GET, POST, OPTIONS"
-        header_up Access-Control-Allow-Headers "*"
+        header_up Access-Control-Allow-Headers "Origin, Content-Type, Accept, Range"
+        header_up Access-Control-Expose-Headers "Content-Length, Content-Range"
+
+        # Forward Range header for video streaming
+        header_up Range {>Range}
     }
 }
