@@ -11,7 +11,7 @@ RUN npm install
 # Copy server and executable
 COPY server.js ./server.js
 COPY jiotv_go-linux-amd64 ./jiotv_go-linux-amd64
-COPY public ./public
+
 
 # Make executable runnable
 RUN chmod +x ./jiotv_go-linux-amd64
