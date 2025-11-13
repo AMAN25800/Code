@@ -1,23 +1,22 @@
-# Use Ubuntu 22.04 as base image
+# Base image
 FROM ubuntu:22.04
 
-# Install dependencies (if any)
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
+    nginx \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the JioTV Go binary into the container
+# Copy executable
 COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
-
-# Make it executable
 RUN chmod +x /app/jiotv_go-linux-amd64
 
-# Set working directory
-WORKDIR /app
+# Copy NGINX config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose the port your app will use
-EXPOSE 5001
+# Expose ports
+EXPOSE 80 5000
 
-# Run the binary with the serve command, binding to 0.0.0.0
-CMD ["sh", "-c", "./jiotv_go-linux-amd64 serve --host 0.0.0.0 --port 5001"]
+# Start executable and NGINX
+CMD /app/jiotv_go-linux-amd64 & nginx -g "daemon off;"
