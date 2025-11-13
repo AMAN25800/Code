@@ -1,0 +1,7 @@
+:5001 {
+    reverse_proxy 127.0.0.1:5001 {
+        header_up Access-Control-Allow-Origin "*"
+        header_up Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header_up Access-Control-Allow-Headers "*"
+    }
+}
