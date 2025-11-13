@@ -21,7 +21,7 @@ COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Expose internal port for backend (optional)
+# Expose internal backend port
 EXPOSE 5000
 
 # Run start script
