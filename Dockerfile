@@ -1,4 +1,4 @@
-# Base image
+# Use Ubuntu 22.04 as base
 FROM ubuntu:22.04
 
 # Install dependencies
@@ -7,7 +7,6 @@ RUN apt-get update && \
       curl \
       ca-certificates \
       wget \
-      tar \
       unzip \
       bash \
       dos2unix \
@@ -26,13 +25,12 @@ RUN wget -O /tmp/ngrok.tgz "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable
     && chmod +x /usr/local/bin/ngrok \
     && rm /tmp/ngrok.tgz
 
-# Expose ports (JioTV Go + ngrok web interface)
+# Expose the app and ngrok web interface ports
 EXPOSE 5002 4040
 
 # Copy startup script
 COPY start.sh /app/start.sh
-RUN dos2unix /app/start.sh \
-    && chmod +x /app/start.sh
+RUN dos2unix /app/start.sh && chmod +x /app/start.sh
 
-# Run startup script
-CMD ["/app/start.sh"]
+# Start app and ngrok
+CMD ["bash", "/app/start.sh"]
