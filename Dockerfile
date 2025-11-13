@@ -1,28 +1,18 @@
 # Base image
-FROM ubuntu:22.04
+FROM node:20-bullseye
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
-    nginx \
-    gettext-base \
-    netcat \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Copy executable
-COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
-RUN chmod +x /app/jiotv_go-linux-amd64
+# Copy executable and Node server
+COPY jiotv_go-linux-amd64 ./jiotv_go-linux-amd64
+COPY server.js ./server.js
 
-# Copy NGINX template
-COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
+# Make executable runnable
+RUN chmod +x ./jiotv_go-linux-amd64
 
-# Copy start script
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+# Expose internal port (optional)
+EXPOSE 3000
 
-# Expose internal backend port
-EXPOSE 5000
-
-# Run start script
-CMD ["/start.sh"]
+# Start Node wrapper
+CMD ["node", "server.js"]
