@@ -16,21 +16,14 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Copy JioTV Go binary
-COPY jiotv_go-linux-amd64 /app/jiotv_go-linux-amd64
-RUN chmod +x /app/jiotv_go-linux-amd64
+COPY jiotv_go-linux-amd64 /app/jiotv_go
+RUN chmod +x /app/jiotv_go
 
-# Install ngrok v3
-RUN wget -O /tmp/ngrok.tgz "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz" \
-    && tar -xvzf /tmp/ngrok.tgz -C /usr/local/bin \
-    && chmod +x /usr/local/bin/ngrok \
-    && rm /tmp/ngrok.tgz
+# Render exposes dynamic port using $PORT
+ENV PORT=10000
 
-# Expose the app and ngrok web interface ports
-EXPOSE 5002 4040
+# Expose the Render service port
+EXPOSE 10000
 
-# Copy startup script
-COPY start.sh /app/start.sh
-RUN dos2unix /app/start.sh && chmod +x /app/start.sh
-
-# Start app and ngrok
-CMD ["bash", "/app/start.sh"]
+# Start JioTV Go with Render's port
+CMD ["/app/jiotv_go", "serve", "--host", "0.0.0.0", "--port", "10000"]
