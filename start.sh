@@ -12,15 +12,15 @@ fi
 # Authenticate ngrok
 ./ngrok config add-authtoken $NGROK_AUTHTOKEN
 
-# Start JioTV Go in background
-./jiotv_go serve --localhost --port $PORT &
+# Start JioTV Go on localhost (inside container)
+./jiotv_go serve --host 127.0.0.1 --port $PORT &
 
-# Wait a few seconds to ensure JioTV Go is running
+# Wait a few seconds to ensure the server is running
 sleep 2
 
-# Start ngrok and print public URL
-./ngrok http $PORT --log=stdout &
+# Start ngrok and expose LOCALHOST:PORT to the internet
+./ngrok http 127.0.0.1:$PORT --log=stdout &
 sleep 5
 
-# Keep container running
+# Keep container alive
 tail -f /dev/null
