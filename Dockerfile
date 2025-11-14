@@ -19,11 +19,12 @@ WORKDIR /app
 COPY jiotv_go-linux-amd64 /app/jiotv_go
 RUN chmod +x /app/jiotv_go
 
-# Render exposes dynamic port using $PORT
+# Expose service port
 ENV PORT=10000
-
-# Expose the Render service port
 EXPOSE 10000
 
-# Start JioTV Go with Render's port
+# Use token from mounted folder if available
+# Default location inside container: /root/.jiotv/token.json
+# You can mount host folder: -v /host/token-folder:/root/.jiotv
+# This way, you can update token.json without rebuilding
 CMD ["/app/jiotv_go", "serve", "--host", "0.0.0.0", "--port", "10000"]
