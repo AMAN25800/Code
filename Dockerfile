@@ -1,4 +1,4 @@
-# Use Ubuntu 22.04 as base
+# Base image
 FROM ubuntu:22.04
 
 # Install dependencies
@@ -19,12 +19,23 @@ WORKDIR /app
 COPY jiotv_go-linux-amd64 /app/jiotv_go
 RUN chmod +x /app/jiotv_go
 
-# Expose service port
+# Download and install ngrok
+RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
+    unzip ngrok-stable-linux-amd64.zip && \
+    chmod +x ngrok && \
+    mv ngrok /usr/local/bin/ngrok && \
+    rm ngrok-stable-linux-amd64.zip
+
+# Expose JioTV Go port
 ENV PORT=10000
 EXPOSE 10000
 
-# Use token from mounted folder if available
-# Default location inside container: /root/.jiotv/token.json
-# You can mount host folder: -v /host/token-folder:/root/.jiotv
-# This way, you can update token.json without rebuilding
-CMD ["/app/jiotv_go", "serve", "--host", "0.0.0.0", "--port", "10000"]
+# Set your ngrok auth token here
+ENV NGROK_AUTHTOKEN=1aLCRoDgttlzs3oayQgVcfQkU9y_7mRVGoUMnVNd6e8YLBpUs
+
+# Start JioTV Go and ngrok continuously
+CMD bash -c "\
+    /app/jiotv_go serve --host 0.0.0.0 --port 10000 & \
+    ngrok authtoken $NGROK_AUTHTOKEN && \
+    ngrok http 10000 --log=stdout \
+"
