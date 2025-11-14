@@ -1,22 +1,24 @@
 #!/bin/bash
+# start.sh
 
-# Check if NGROK_AUTHTOKEN is set
-if [ -z "$NGROK_AUTHTOKEN" ]; then
-    echo "ERROR: NGROK_AUTHTOKEN is not set!"
-    exit 1
-fi
+# Exit on error
+set -e
 
-# Start JioTV Go server
+# Start JioTV Go in background
 /app/jiotv_go serve --host 0.0.0.0 --port 10000 &
 
-# Start ngrok on the same port
-ngrok http 10000 --authtoken="$NGROK_AUTHTOKEN" --log=stdout &
+# Start ngrok tunnel using env variable NGROK_AUTHTOKEN
+./ngrok authtoken $NGROK_AUTHTOKEN
+./ngrok http 10000 --log=stdout &
+
+# Wait a few seconds for ngrok to start
 sleep 5
 
-# Fetch and print the public ngrok URL
-NGROK_URL=$(curl --silent http://127.0.0.1:4040/api/tunnels | \
-            jq -r '.tunnels[0].public_url')
-echo "🚀 JioTV Go is publicly available at: $NGROK_URL"
+# Get the public ngrok URL and print it
+NGROK_URL=$(curl --silent http://127.0.0.1:4040/api/tunnels | grep -oP '(?<=public_url":")[^"]+')
+echo "=============================="
+echo "Your ngrok URL is: $NGROK_URL"
+echo "=============================="
 
 # Keep the container running
 wait
