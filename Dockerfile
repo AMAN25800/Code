@@ -19,12 +19,13 @@ WORKDIR /app
 COPY jiotv_go-linux-amd64 /app/jiotv_go
 RUN chmod +x /app/jiotv_go
 
-# Download and install ngrok
-RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
-    unzip ngrok-stable-linux-amd64.zip && \
-    chmod +x ngrok && \
-    mv ngrok /usr/local/bin/ngrok && \
-    rm ngrok-stable-linux-amd64.zip
+# Download latest ngrok v3
+RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
+    && tar -xvzf ngrok-v3-stable-linux-amd64.tgz \
+    && mv ngrok /usr/local/bin/ \
+    && chmod +x /usr/local/bin/ngrok \
+    && rm ngrok-v3-stable-linux-amd64.tgz
+
 
 # Expose JioTV Go port
 ENV PORT=10000
