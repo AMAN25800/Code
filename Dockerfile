@@ -13,16 +13,18 @@ WORKDIR /app
 COPY jiotv_go-linux-amd64 /app/jiotv_go
 RUN chmod +x /app/jiotv_go
 
-# Copy ngrok
-COPY ngrok /app/ngrok
-RUN chmod +x /app/ngrok
+# Download ngrok
+RUN curl -L -o ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
+    unzip ngrok.zip && \
+    chmod +x ngrok && \
+    rm ngrok.zip
 
 # Copy start script
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
-# Expose port
+# Expose JioTV Go port
 EXPOSE 10000
 
-# Start script
+# Start container with script
 CMD ["/app/start.sh"]
