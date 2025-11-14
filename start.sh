@@ -13,7 +13,7 @@ fi
 ./ngrok config add-authtoken $NGROK_AUTHTOKEN
 
 # Start JioTV Go in background
-./jiotv_go serve --host 0.0.0.0 --port $PORT &
+./jiotv_go serve --localhost --port $PORT &
 
 # Wait a few seconds to ensure JioTV Go is running
 sleep 2
