@@ -25,8 +25,8 @@ RUN curl -L -o ngrok.zip https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-linux
     rm ngrok.zip
 
 # Expose JioTV Go port
-ENV PORT=5001
-EXPOSE 5001
+ENV PORT=10000
+EXPOSE 10000
 
 # Environment variable for ngrok authtoken
 # You must set NGROK_AUTHTOKEN when deploying
